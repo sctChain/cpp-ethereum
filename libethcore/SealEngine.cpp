@@ -42,10 +42,10 @@ void SealEngineFace::populateFromParent(BlockHeader& _bi, BlockHeader const& _pa
 void SealEngineFace::verifyTransaction(ImportRequirements::value _ir, TransactionBase const& _t,
     BlockHeader const& _header, u256 const& _gasUsed) const
 {
-	if ((_ir & ImportRequirements::TransactionSignatures) && _header.number() < chainParams().EIP158ForkBlock && _t.isReplayProtected())
+	if ((_ir & ImportRequirements::TransactionSignatures) && _header.number() < chainParams().EIP158ForkBlock && _t.isReplayProtected() && _t.isCreation())
 		BOOST_THROW_EXCEPTION(InvalidSignature());
 
-	if ((_ir & ImportRequirements::TransactionSignatures) && _header.number() < chainParams().constantinopleForkBlock && _t.hasZeroSignature())
+	if ((_ir & ImportRequirements::TransactionSignatures) && _header.number() < chainParams().constantinopleForkBlock && _t.hasZeroSignature() && _t.isCreation())
 		BOOST_THROW_EXCEPTION(InvalidSignature());
 
 	if ((_ir & ImportRequirements::TransactionBasic) &&
